@@ -1,0 +1,68 @@
+<!-- pages/admin/user-detail/user-detail.wxml -->
+<view class="container">
+  <view class="form-card">
+    <!-- 姓名 -->
+    <view class="form-group">
+      <text class="label">姓名</text>
+      <input 
+        class="input" 
+        value="{{form.name}}" 
+        bindinput="onInputChange" 
+        data-field="name"
+        placeholder="请输入姓名"
+      />
+    </view>
+
+    <!-- 电话 -->
+    <view class="form-group">
+      <text class="label">电话</text>
+      <input 
+        class="input" 
+        type="number"
+        value="{{form.phone}}" 
+        bindinput="onInputChange" 
+        data-field="phone"
+        placeholder="请输入电话号码"
+      />
+    </view>
+
+    <!-- 校区（选择器） -->
+    <view class="form-group" bindtap="pickCampus">
+      <text class="label">校区</text>
+      <view class="picker-value">
+        <text class="{{form.campus ? '' : 'placeholder'}}">{{form.campus || '请选择校区'}}</text>
+        <text class="picker-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 等级（选择器） -->
+    <view class="form-group" bindtap="pickLevel">
+      <text class="label">等级</text>
+      <view class="picker-value">
+        <text class="level-text">LV.{{form.level}} {{levelNames[(form.level || 1) - 1] || ''}}</text>
+        <text class="picker-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 只读信息 -->
+  <view class="info-card">
+    <view class="info-row">
+      <text class="info-label">积分</text>
+      <text class="info-value">{{userDetail.points || 0}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">连续打卡</text>
+      <text class="info-value">{{userDetail.continuous_days || 0}} 天</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">注册时间</text>
+      <text class="info-value">{{userDetail.created_at || '未知'}}</text>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-btn {{hasChanges ? 'active' : ''}}" bindtap="handleSave">
+    <text>{{saving ? '保存中...' : '保存修改'}}</text>
+  </view>
+</view>

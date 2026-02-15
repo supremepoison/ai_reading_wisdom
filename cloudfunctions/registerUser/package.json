@@ -1,0 +1,12 @@
+{
+    "name": "register-user",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "config": {
+        "timeout": 60
+    },
+    "dependencies": {
+        "wx-server-sdk": "~2.6.3"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "name": "generate-note-questions",
+    "version": "1.0.0",
+    "description": "Generate reading note guiding questions",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "~2.6.3",
+        "axios": "^1.6.0"
+    }
+}

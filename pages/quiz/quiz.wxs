@@ -1,0 +1,16 @@
+var getOptionClass = function(index, selectedOption, correctIndex) {
+  if (selectedOption === null) {
+    return 'option-default';
+  }
+  if (index === correctIndex) {
+    return 'option-correct';
+  }
+  if (index === selectedOption) {
+    return 'option-wrong';
+  }
+  return 'option-disabled';
+}
+
+module.exports = {
+  getOptionClass: getOptionClass
+};

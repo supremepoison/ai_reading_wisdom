@@ -1,0 +1,80 @@
+/* pages/admin/user-list/user-list.wxss */
+.container {
+  padding: 32rpx;
+  background-color: var(--color-bg);
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 32rpx;
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: 900;
+  color: var(--color-text);
+  display: block;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.user-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+  padding: 28rpx 32rpx;
+  border-radius: 32rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.04);
+  border: 2rpx solid var(--color-border);
+}
+
+.user-item:active {
+  background-color: #FFF8E6;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+}
+
+.avatar-placeholder {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #FFD93D 0%, #FFC107 100%);
+}
+
+.lv-2 { background: linear-gradient(135deg, #81C784 0%, #4CAF50 100%); }
+.lv-3 { background: linear-gradient(135deg, #64B5F6 0%, #2196F3 100%); }
+.lv-4 { background: linear-gradient(135deg, #BA68C8 0%, #9C27B0 100%); }
+.lv-5 { background: linear-gradient(135deg, #FF8A65 0%, #FF5722 100%); }
+
+.name {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.arrow {
+  font-size: 40rpx;
+  color: #CCC;
+  font-weight: 300;
+}

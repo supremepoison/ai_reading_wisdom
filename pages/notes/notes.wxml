@@ -1,0 +1,115 @@
+<!--pages/notes/notes.wxml - 读后感生成-->
+<block wx:if="{{isRegistered}}">
+  <view class="container">
+    <!-- 加载问题中 -->
+    <view wx:if="{{step === 'loading'}}" class="generating-view">
+      <view class="spinner-container">
+        <view class="spinner"></view>
+        <text class="spinner-emoji">📝</text>
+      </view>
+      <text class="generating-title">{{loadingTip}}</text>
+      <text class="generating-desc">正在为《{{currentBook.title}}》准备专属问题</text>
+    </view>
+
+    <!-- 引导提示 -->
+    <view wx:if="{{step === 'input'}}" class="notes-input">
+      <view class="intro-card">
+        <view class="intro-icon">✍️</view>
+        <view class="intro-content">
+          <text class="intro-title">读后感小助手</text>
+          <text class="intro-desc">《{{currentBook.title}}》{{currentBook.currentChapter}}</text>
+          <text class="intro-hint">回答 5 个问题，魔法生成！</text>
+        </view>
+      </view>
+
+      <!-- 问题列表 -->
+      <view class="questions-list">
+        <view 
+          wx:for="{{questions}}" 
+          wx:key="index"
+          class="question-card"
+        >
+          <text class="question-label">{{item}}</text>
+          <textarea 
+            class="answer-input"
+            value="{{answers[index]}}"
+            bindinput="onAnswerChange"
+            data-index="{{index}}"
+            placeholder="我觉得..."
+            placeholder-class="answer-placeholder"
+            maxlength="500"
+            auto-height
+          />
+        </view>
+      </view>
+
+      <!-- 生成按钮 -->
+      <button class="btn btn-dark generate-btn" bindtap="handleGenerate">
+        <image src="/assets/icons/trophy.svg" mode="aspectFit" class="btn-icon"/>
+        <text>生成读后感</text>
+      </button>
+    </view>
+
+    <!-- 生成中状态 -->
+    <view wx:if="{{step === 'generating'}}" class="generating-view">
+      <view class="spinner-container">
+        <view class="spinner"></view>
+        <text class="spinner-emoji">✨</text>
+      </view>
+      <text class="generating-title">AI 魔法施法中...</text>
+      <text class="generating-desc">正在整理你的精彩想法！</text>
+    </view>
+
+    <!-- 结果展示 -->
+    <view wx:if="{{step === 'result'}}" class="result-view">
+      <view class="result-card">
+        <view class="result-inner">
+          <!-- 装饰图标 -->
+          <view class="decorative-badge">
+            <image src="/assets/icons/award.svg" mode="aspectFit"/>
+          </view>
+
+          <!-- 书籍信息 -->
+          <view class="book-header">
+            <image src="{{currentBook.coverUrl || 'https://picsum.photos/id/24/100/100'}}" class="book-thumb" mode="aspectFill"/>
+            <view class="book-meta">
+              <text class="book-name">《{{currentBook.title}}》</text>
+              <view class="date-badge">
+                <text>📅 {{currentDate}}</text>
+              </view>
+            </view>
+          </view>
+
+          <!-- 读后感内容 -->
+          <view class="note-content">
+            <text>{{generatedNote}}</text>
+          </view>
+
+          <!-- 底部标识 -->
+          <view class="result-footer">
+            <view class="grade-badge">
+              <text>A+</text>
+            </view>
+            <text class="brand-text">WISDOM KEY</text>
+            <text class="medal-emoji">🏅</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="action-buttons">
+        <button class="btn btn-secondary" bindtap="handleRewrite">
+          <text>重写</text>
+        </button>
+        <button class="btn btn-primary" bindtap="handleShare">
+          <image src="/assets/icons/share.svg" mode="aspectFit" class="btn-icon"/>
+          <text>分享卡片</text>
+        </button>
+      </view>
+    </view>
+  </view>
+</block>
+
+<view wx:else class="auth-loading-placeholder">
+  <view class="loading-spinner"></view>
+</view>

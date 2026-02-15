@@ -1,0 +1,132 @@
+<!--pages/profile/profile.wxml - 个人中心-->
+<block wx:if="{{isRegistered}}">
+  <view class="container">
+    <!-- 用户头像和信息 -->
+    <view class="profile-header">
+      <view class="avatar-container">
+        <image src="{{userInfo.avatarUrl || 'https://picsum.photos/id/64/200/200'}}" class="avatar" mode="aspectFill"/>
+      </view>
+      <text class="user-name">{{userInfo.name || '未命名'}}</text>
+      <view class="user-badges">
+        <view class="level-badge">
+          <text wx:if="{{levelNames.length > 0}}">LV.{{userInfo.level || 1}} {{levelNames[(userInfo.level || 1) - 1]}}</text>
+          <text wx:else>LV.{{userInfo.level || 1}} 加载中...</text>
+        </view>
+      </view>
+      
+      <!-- 管理员入口 -->
+      <view wx:if="{{userInfo.role === 'admin'}}" class="admin-entry" bindtap="navigateToAdmin">
+        <text>👑 用户管理</text>
+      </view>
+    </view>
+
+    <!-- 数据统计 -->
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{userInfo.points || 0}}</text>
+        <text class="stat-label">总积分</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{userInfo.continuous_days || 0}}</text>
+        <text class="stat-label">连续打卡</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{readingHistory.length || 0}}</text>
+        <text class="stat-label">正在阅读</text>
+      </view>
+    </view>
+
+    <!-- 勋章墙 -->
+    <view class="section">
+      <view class="section-header">
+        <image src="/assets/icons/award.svg" mode="aspectFit" class="section-icon"/>
+        <text class="section-title">勋章墙</text>
+      </view>
+      <view class="medal-wall card">
+        <view 
+          wx:for="{{medals}}" 
+          wx:key="id"
+          class="medal-item"
+        >
+          <view class="medal-icon {{item.achieved ? 'medal-achieved' : 'medal-locked'}}">
+            <text>{{item.icon}}</text>
+          </view>
+          <text class="medal-name {{item.achieved ? '' : 'medal-name-locked'}}">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 阅读档案 -->
+    <view class="section">
+      <view class="section-header flex justify-between items-center">
+        <text class="section-title">阅读档案</text>
+        <view class="discover-btn" bindtap="openBookPicker">
+          <text>挑选新书</text>
+        </view>
+      </view>
+      <view class="reading-list">
+        <view 
+          wx:for="{{readingHistory}}" 
+          wx:key="title"
+          class="reading-item"
+        >
+          <image src="{{item.coverUrl}}" class="reading-cover" mode="aspectFill"/>
+          <view class="reading-info">
+            <text class="reading-title">{{item.title}}</text>
+            <view class="reading-tags">
+              <view class="tag {{item.status === 'reading' ? 'tag-green' : 'tag-gray'}}">
+                <text>{{item.status === 'reading' ? '正在阅读' : '已读待续'}}</text>
+              </view>
+              <view class="tag tag-blue">
+                <text>{{item.notesCount}} 篇感悟</text>
+              </view>
+            </view>
+          </view>
+          <!-- 切换书籍按钮：仅当不是当前正在读的书时显示 -->
+          <view wx:if="{{item.status !== 'reading'}}" 
+                class="switch-book-btn" 
+                catchtap="handleSwitchBook" 
+                data-id="{{item.bookId}}">
+            <text>切换阅读</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 选书弹窗（本页内弹出） -->
+    <view wx:if="{{showBookPicker}}" class="book-picker-overlay" catchtap="closeBookPicker">
+      <view class="book-picker-container animate-pop" catchtap="">
+        <view class="picker-header">
+          <text class="picker-title">切换书籍</text>
+          <text class="picker-subtitle">选择后当前书籍进度会自动保存</text>
+        </view>
+        <scroll-view scroll-y class="book-shelf">
+          <view 
+            wx:for="{{recommendBooks}}" 
+            wx:key="_id" 
+            class="recommend-book-item"
+            catchtap="handlePickBook"
+            data-id="{{item._id}}"
+          >
+            <image src="{{item.cover_url}}" mode="aspectFill" class="recommend-cover"/>
+            <view class="recommend-info">
+              <text class="recommend-title">{{item.title}}</text>
+              <text class="recommend-author">{{item.author}}</text>
+              <view class="level-tag">推荐等级: LV.{{item.recommend_level}}</view>
+            </view>
+            <view class="select-btn">开卷</view>
+          </view>
+        </scroll-view>
+        <view class="picker-footer">
+          <view class="close-picker-btn" bindtap="closeBookPicker">
+            <text>取消</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</block>
+
+<view wx:else class="auth-loading-placeholder">
+  <view class="loading-spinner"></view>
+</view>

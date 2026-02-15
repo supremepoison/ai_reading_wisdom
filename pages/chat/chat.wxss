@@ -1,0 +1,249 @@
+/* pages/chat/chat.wxss */
+
+/* 页面容器 */
+page {
+  height: 100%;
+  background-color: var(--color-bg);
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* 上下文提示 - 顶部悬浮 */
+.context-pill {
+  position: absolute;
+  top: 24rpx;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.context-pill-inner {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 10rpx 24rpx;
+  border-radius: 999rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.04);
+  border: 1rpx solid rgba(0, 0, 0, 0.03);
+  pointer-events: auto;
+}
+
+.icon-xs {
+  width: 24rpx;
+  height: 24rpx;
+  margin-right: 8rpx;
+  opacity: 0.6;
+}
+
+.context-pill text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #666;
+}
+
+/* 聊天消息区域 */
+.chat-messages {
+  flex: 1;
+  padding: 100rpx 24rpx 20rpx 24rpx;
+  overflow-y: scroll;
+  overflow-x: visible;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 消息容器 */
+.message-wrapper {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 32rpx;
+  /* width: 100%;  <-- 删除这个，防止子元素宽度计算超出 */
+  box-sizing: border-box;
+}
+
+.user-message { 
+  justify-content: flex-end; /* 头像没了，直接靠右对齐 */
+  padding-right: 40rpx;      /* 额外留出距离，防止贴边 */
+}
+.ai-message { 
+  justify-content: flex-start; /* AI 靠左 */
+}
+
+/* 头像 */
+.avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-avatar {
+  margin-right: 16rpx;
+  border: 2rpx solid #FFD93D;
+}
+.ai-avatar image { width: 60%; height: 60%; }
+
+/* 消息气泡 */
+.message-bubble {
+  max-width: 80%; /* 头像去掉了，可以宽一点 */
+  padding: 24rpx 32rpx;
+  font-size: 30rpx;
+  line-height: 1.55;
+  position: relative;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.bubble-ai {
+  background-color: #FFFFFF;
+  color: #333;
+  border-radius: 8rpx 36rpx 36rpx 36rpx;
+  border: 1rpx solid #F0E6D2;
+}
+
+.bubble-user {
+  background: linear-gradient(135deg, #FFD93D 0%, #FFC800 100%);
+  color: #3d2b0f;
+  border-radius: 36rpx 8rpx 36rpx 36rpx;
+}
+
+/* 加载动画 */
+.loading-dots { display: flex; align-items: center; height: 40rpx; }
+.dot {
+  width: 12rpx; height: 12rpx; margin: 0 6rpx;
+  background-color: #CCC; border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+.dot-1 { animation-delay: -0.32s; }
+.dot-2 { animation-delay: -0.16s; }
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+/* =================================
+   输入栏核心样式 (修复变形问题)
+   ================================= */
+.input-area {
+  /* 悬浮胶囊布局 */
+  margin: 30rpx;
+  margin-bottom: calc(30rpx + env(safe-area-inset-bottom));
+  padding: 8rpx 12rpx; /* 内部间距 */
+  
+  display: flex;
+  align-items: center;
+  
+  /* 胶囊外观 */
+  background-color: #FFFFFF;
+  border-radius: 999rpx;
+  
+  /* 暖色立体边框 */
+  border: 4rpx solid #F2E8C9;
+  box-shadow: 0 8rpx 0 0 #F2E8C9, 0 8rpx 20rpx rgba(0,0,0,0.05);
+  z-index: 100;
+  min-height: 80rpx;
+  box-sizing: border-box;
+}
+
+/* 左侧语音按钮 - 纯图标，无背景 */
+.voice-btn {
+  /* 强制固定宽度，防止拉伸 */
+  width: 64rpx !important;
+  height: 64rpx !important;
+  min-width: 64rpx !important; 
+  padding: 0 !important;
+  margin: 0 10rpx !important;
+  
+  background: transparent !important; /* 无背景 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0; /* 禁止被 Flex 压缩 */
+}
+
+.voice-btn image {
+  width: 40rpx;
+  height: 40rpx;
+  opacity: 0.4;
+}
+
+.voice-btn:active {
+  background-color: #F5F5F5 !important;
+}
+
+/* 输入框 - 占据剩余空间 */
+.message-input {
+  flex: 1;
+  height: 64rpx;
+  min-height: 64rpx;
+  background: transparent;
+  padding: 0 10rpx;
+  font-size: 30rpx;
+  color: #333;
+  border: none;
+}
+
+.input-placeholder {
+  color: #C0C0C0;
+}
+
+/* 右侧发送按钮 - 圆形浅灰背景 */
+.send-btn {
+  /* 强制固定宽度 */
+  width: 64rpx !important;
+  height: 64rpx !important;
+  min-width: 64rpx !important;
+  padding: 0 !important;
+  margin: 0 6rpx !important;
+  
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F7F8FA !important; /* 浅灰底 */
+  flex-shrink: 0; /* 禁止被 Flex 压缩 */
+  transition: all 0.2s;
+}
+
+.send-btn image {
+  width: 32rpx;
+  height: 32rpx;
+  margin-left: 4rpx; /* 视觉修正：发送图标通常看起来偏左 */
+  opacity: 0.4;
+}
+
+/* 发送按钮激活态 */
+.send-active {
+  background-color: #FFD93D !important;
+}
+
+.send-active image {
+  opacity: 1;
+  filter: brightness(0.2);
+}
+
+/* 重置微信小程序 button 默认样式 */
+/* 重置微信小程序 button 默认样式 - 使用类选择器替代标签选择器 */
+.btn-reset {
+  border: none !important;
+  font-size: 0;
+  line-height: normal;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent;
+}
+.btn-reset::after {
+  display: none !important;
+  border: none !important;
+}

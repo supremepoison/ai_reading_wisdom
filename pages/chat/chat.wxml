@@ -1,0 +1,85 @@
+<!--pages/chat/chat.wxml - AI 聊天导读-->
+<block wx:if="{{isRegistered}}">
+  <view class="chat-container">
+    <!-- 上下文提示 -->
+    <view class="context-pill">
+      <view class="context-pill-inner">
+        <image src="/assets/icons/book.svg" mode="aspectFit" class="icon-xs"/>
+        <text>正在讨论: {{currentBook.title}}</text>
+      </view>
+    </view>
+
+    <!-- 聊天消息区域 -->
+    <scroll-view 
+      class="chat-messages" 
+      scroll-y="true" 
+      scroll-into-view="{{scrollToView}}"
+      scroll-with-animation="true"
+    >
+      <view 
+        wx:for="{{messages}}" 
+        wx:key="id"
+        id="msg-{{item.id}}"
+        class="message-wrapper {{item.role === 'user' ? 'user-message' : 'ai-message'}}"
+      >
+        <!-- AI 头像（左侧） -->
+        <view wx:if="{{item.role !== 'user'}}" class="avatar ai-avatar">
+          <image src="/assets/icons/brain.svg" mode="aspectFit"/>
+        </view>
+
+        <!-- 消息气泡 -->
+        <view class="message-bubble {{item.role === 'user' ? 'bubble-user' : 'bubble-ai'}}">
+          <text>{{item.text}}</text>
+        </view>
+      </view>
+      
+      <!-- 加载中状态 -->
+      <view wx:if="{{isLoading}}" class="message-wrapper ai-message">
+        <view class="avatar ai-avatar">
+          <image src="/assets/icons/brain.svg" mode="aspectFit"/>
+        </view>
+        <view class="message-bubble bubble-ai loading-bubble">
+          <view class="loading-dots">
+            <view class="dot dot-1"></view>
+            <view class="dot dot-2"></view>
+            <view class="dot dot-3"></view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 占位，确保滚动到底部 -->
+      <view id="msg-bottom" style="height: 20rpx;"></view>
+    </scroll-view>
+
+    <!-- 输入区域 -->
+    <view class="input-area">
+      <button class="voice-btn btn-reset" bindtap="handleVoice" style="width: 64rpx">
+        <image src="/assets/icons/mic.svg" mode="aspectFit"/>
+      </button>
+      
+      <input 
+        class="message-input"
+        value="{{inputText}}"
+        bindinput="onInputChange"
+        bindconfirm="handleSend"
+        placeholder="说点什么..."
+        placeholder-class="input-placeholder"
+        confirm-type="send"
+      />
+      
+      <button 
+        class="send-btn btn-reset {{inputText ? 'send-active' : ''}}" 
+        bindtap="handleSend"
+        disabled="{{!inputText || isLoading}}"
+        style="width: 64rpx"
+      >
+        <image src="/assets/icons/send.svg" mode="aspectFit"/>
+      </button>
+    </view>
+  </view>
+</block>
+
+<!-- 未登录空白位 -->
+<view wx:else class="auth-loading-placeholder">
+  <view class="loading-spinner"></view>
+</view>

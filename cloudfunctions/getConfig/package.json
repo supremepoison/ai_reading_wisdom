@@ -1,0 +1,9 @@
+{
+    "name": "get-config",
+    "version": "1.0.0",
+    "description": "读取配置（等级、校区）",
+    "main": "index.js",
+    "dependencies": {
+        "wx-server-sdk": "~2.6.3"
+    }
+}

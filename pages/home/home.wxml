@@ -1,0 +1,157 @@
+<!--pages/home/home.wxml - 首页打卡-->
+<view class="container">
+  <!-- 已登录状态 -->
+  <view wx:if="{{isRegistered}}">
+    <!-- 顶部统计卡片 -->
+    <view class="stats-card card flex items-center justify-between">
+      <view class="flex items-center">
+        <view class="flame-icon">
+          <image src="/assets/icons/flame.svg" mode="aspectFit" class="icon-md"/>
+        </view>
+        <view class="streak-info">
+          <text class="text-small">连续阅读</text>
+          <view class="streak-value">
+            <text class="text-title">{{streak}}</text>
+            <text class="text-small"> 天</text>
+          </view>
+        </view>
+      </view>
+      <view class="points-badge flex items-center">
+        <image src="/assets/icons/star.svg" mode="aspectFit" class="icon-sm"/>
+        <text class="points-text">{{userPoints}}</text>
+      </view>
+    </view>
+
+    <!-- 今日任务卡片 -->
+    <view class="section-header flex items-center justify-between">
+      <text class="text-title">今日任务</text>
+      <view class="chapter-badge">
+        <text>第 {{currentBook.chapterNumber}}/{{currentBook.totalChapters}} 回</text>
+      </view>
+    </view>
+    
+    <view class="mission-card">
+      <!-- 背景装饰 -->
+      <view class="mission-bg-circle"></view>
+      
+      <view class="mission-content flex">
+        <image src="{{currentBook.coverUrl}}" mode="aspectFill" class="book-cover"/>
+        <view class="book-info flex-1">
+          <text class="book-title">{{currentBook.title}}</text>
+          <text class="book-author">{{currentBook.author}}</text>
+          <view class="progress-bar">
+            <view class="progress-fill" style="width: {{currentBook.progress}}%"></view>
+          </view>
+          <text class="progress-text">已读 {{currentBook.progress}}%</text>
+        </view>
+      </view>
+      
+      <view class="chapter-panel">
+        <text class="chapter-title">{{currentBook.currentChapter}}</text>
+        
+        <view wx:if="{{!checkedInToday}}" class="action-buttons-grid">
+          <view class="checkin-btn quick-btn" bindtap="handleQuickCheckIn">
+            <text class="btn-icon">⚡️</text>
+            <text class="btn-text">快速打卡</text>
+            <text class="btn-points">+1</text>
+          </view>
+          <view class="checkin-btn photo-btn" bindtap="handlePhotoCheckIn">
+            <text class="btn-icon">📸</text>
+            <text class="btn-text">拍照打卡</text>
+            <text class="btn-points">+2</text>
+          </view>
+          <view class="checkin-btn voice-btn" bindtap="handleVoiceCheckIn"
+                bindtouchstart="startRecording" bindtouchmove="handleTouchMove" bindtouchend="stopRecording">
+            <text class="btn-icon">🎤</text>
+            <text class="btn-text">{{isRecording ? '松开结束' : '语音打卡'}}</text>
+            <text class="btn-points">+3</text>
+          </view>
+        </view>
+        
+        <view wx:else class="completed-msg">
+          <text class="success-icon">✅</text>
+          <text>今日打卡已完成</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 录音状态提示 -->
+    <view wx:if="{{isRecording}}" class="recording-overlay">
+      <view class="recording-box {{willCancel ? 'cancel-style' : ''}}">
+        <view class="recording-wave" wx:if="{{!willCancel}}"></view>
+        <view class="cancel-icon" wx:if="{{willCancel}}">↩️</view>
+        <text class="recording-text">{{willCancel ? '松开手指，取消发送' : '正在录音... 上滑取消'}}</text>
+      </view>
+    </view>
+
+    <!-- 日历打卡记录 -->
+    <view class="card calendar-card">
+      <view class="calendar-header flex items-center">
+        <image src="/assets/icons/calendar.svg" mode="aspectFit" class="icon-sm"/>
+        <text class="text-title" style="margin-left: 16rpx;">我的足迹</text>
+      </view>
+      <view class="calendar-grid">
+        <view
+          wx:for="{{calendarDays}}"
+          wx:key="day"
+          class="calendar-day {{item.status}}"
+        >
+          <text>{{item.day}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 未登录状态 -->
+  <view wx:else class="auth-gate">
+    <view class="auth-gate-card animate-pop">
+      <text class="auth-gate-icon">📚</text>
+      <text class="auth-gate-title">欢迎来到智慧之匙</text>
+      <text class="auth-gate-desc">AI 阅读伴侣，记录您的每一次成长</text>
+      <view class="auth-gate-buttons">
+        <button class="auth-gate-btn primary" bindtap="goToRegister">新学员注册</button>
+        <button class="auth-gate-btn secondary" bindtap="handleLogin">老学员登录</button>
+      </view>
+    </view>
+  </view>
+  <!-- 选书弹窗 -->
+  <view wx:if="{{showBookPicker && isRegistered}}" class="book-picker-overlay">
+    <view class="book-picker-container animate-pop">
+      <view class="picker-header">
+        <text class="picker-title">开启智慧之旅</text>
+        <text class="picker-subtitle">根据您的等级，为您推荐以下书籍</text>
+      </view>
+      <scroll-view scroll-y class="book-shelf">
+        <view 
+          wx:for="{{recommendBooks}}" 
+          wx:key="_id" 
+          class="recommend-book-item"
+          bindtap="handleSelectBook"
+          data-id="{{item._id}}"
+        >
+          <image src="{{item.cover_url}}" mode="aspectFill" class="recommend-cover"/>
+          <view class="recommend-info">
+            <text class="recommend-title">{{item.title}}</text>
+            <text class="recommend-author">{{item.author}}</text>
+            <view class="level-tag">推荐等级: LV.{{item.recommend_level}}</view>
+          </view>
+          <view class="select-btn">开卷</view>
+        </view>
+      </scroll-view>
+      <view class="picker-footer">
+        <text class="picker-tip">先读一本好书，是成长的开始</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 打卡成功动画弹窗 -->
+<view wx:if="{{showAnimation}}" class="success-overlay">
+  <view class="success-modal animate-pop">
+    <text class="success-emoji animate-float">🌟</text>
+    <text class="success-title">太棒啦!</text>
+    <view class="success-points">
+      <text>+{{earnedPoints}} 积分</text>
+    </view>
+  </view>
+</view>

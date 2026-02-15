@@ -1,0 +1,23 @@
+<!-- pages/admin/user-list/user-list.wxml -->
+<view class="container">
+  <view class="header">
+    <text class="title">👑 用户管理</text>
+    <text class="subtitle">共 {{users.length}} 位学员</text>
+  </view>
+
+  <view class="user-list">
+    <view 
+      wx:for="{{users}}" 
+      wx:key="_id" 
+      class="user-item"
+      bindtap="goToDetail"
+      data-openid="{{item.openid}}"
+    >
+      <view class="user-info">
+        <view class="avatar-placeholder lv-{{item.level || 1}}">{{item.name ? item.name[0] : 'U'}}</view>
+        <text class="name">{{item.name || '未命名'}}</text>
+      </view>
+      <view class="arrow">›</view>
+    </view>
+  </view>
+</view>

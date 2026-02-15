@@ -1,0 +1,90 @@
+/* pages/register/register.wxss */
+.container {
+  padding: 48rpx;
+  background-color: var(--color-bg);
+  min-height: 100vh;
+}
+
+.register-header {
+  margin-bottom: 60rpx;
+  text-align: center;
+}
+
+.title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 16rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #666;
+}
+
+.form-container {
+  background-color: #FFFFFF;
+  padding: 48rpx;
+}
+
+.form-item {
+  margin-bottom: 40rpx;
+}
+
+.label {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 16rpx;
+}
+
+.input {
+  background-color: #F9FAFB;
+  padding: 24rpx 32rpx;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  border: 2rpx solid #E5E7EB;
+}
+
+.picker-inner {
+  background-color: #F9FAFB;
+  padding: 24rpx 32rpx;
+  border-radius: 16rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 2rpx solid #E5E7EB;
+  min-height: 44rpx;
+}
+
+.picker-arrow {
+  font-size: 20rpx;
+  color: #9CA3AF;
+}
+
+.submit-btn {
+  margin-top: 60rpx;
+  background-color: var(--color-yellow);
+  color: var(--color-text);
+  font-weight: 800;
+  padding: 30rpx;
+  border-radius: 99rpx;
+  box-shadow: 0 8rpx 0 #E5C330;
+}
+
+.submit-btn:active {
+  transform: translateY(4rpx);
+  box-shadow: 0 4rpx 0 #E5C330;
+}
+
+.footer {
+  margin-top: 48rpx;
+  text-align: center;
+}
+
+.footer text {
+  font-size: 24rpx;
+  color: #9CA3AF;
+}

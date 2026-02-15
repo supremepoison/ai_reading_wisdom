@@ -1,0 +1,62 @@
+{
+    "pages": [
+        "pages/home/home",
+        "pages/chat/chat",
+        "pages/notes/notes",
+        "pages/quiz/quiz",
+        "pages/quiz-result/quiz-result",
+        "pages/register/register",
+        "pages/profile/profile",
+        "pages/admin/user-list/user-list",
+        "pages/admin/user-detail/user-detail"
+    ],
+    "window": {
+        "navigationBarBackgroundColor": "#FFFDF5",
+        "navigationBarTitleText": "智慧之匙",
+        "navigationBarTextStyle": "black",
+        "backgroundColor": "#FFFDF5",
+        "backgroundTextStyle": "dark"
+    },
+    "tabBar": {
+        "custom": false,
+        "color": "#9C8C74",
+        "selectedColor": "#FFD93D",
+        "backgroundColor": "#FFFFFF",
+        "borderStyle": "white",
+        "list": [
+            {
+                "pagePath": "pages/home/home",
+                "text": "打卡",
+                "iconPath": "assets/icons/tab/home.png",
+                "selectedIconPath": "assets/icons/tab/home-active.png"
+            },
+            {
+                "pagePath": "pages/chat/chat",
+                "text": "导读",
+                "iconPath": "assets/icons/tab/chat.png",
+                "selectedIconPath": "assets/icons/tab/chat-active.png"
+            },
+            {
+                "pagePath": "pages/notes/notes",
+                "text": "感悟",
+                "iconPath": "assets/icons/tab/notes.png",
+                "selectedIconPath": "assets/icons/tab/notes-active.png"
+            },
+            {
+                "pagePath": "pages/quiz/quiz",
+                "text": "闯关",
+                "iconPath": "assets/icons/tab/quiz.png",
+                "selectedIconPath": "assets/icons/tab/quiz-active.png"
+            },
+            {
+                "pagePath": "pages/profile/profile",
+                "text": "我的",
+                "iconPath": "assets/icons/tab/profile.png",
+                "selectedIconPath": "assets/icons/tab/profile-active.png"
+            }
+        ]
+    },
+    "sitemapLocation": "sitemap.json",
+    "style": "v2",
+    "lazyCodeLoading": "requiredComponents"
+}

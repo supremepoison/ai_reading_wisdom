@@ -1,0 +1,99 @@
+<!--pages/quiz/quiz.wxml - 闯关答题-->
+<block wx:if="{{isRegistered}}">
+  <view class="container">
+    <!-- 关卡选择器 (显示进度) -->
+    <view class="level-selector">
+      <view 
+        wx:for="{{levels}}" 
+        wx:key="id"
+        wx:for-index="idx"
+        class="level-btn {{currentLevelIndex === idx ? 'level-active' : ''}} {{idx < currentLevelIndex ? 'level-done' : ''}}"
+      >
+        <text wx:if="{{idx < currentLevelIndex}}">✓</text>
+        <text wx:else>{{idx + 1}}</text>
+        <text class="level-label">{{item.label}}</text>
+      </view>
+    </view>
+
+    <!-- Loading 状态 -->
+    <view wx:if="{{isLoading}}" class="empty-state">
+      <view class="loading-spinner"></view>
+      <text class="empty-text">{{loadingTip}}</text>
+    </view>
+
+    <!-- 无题目状态 -->
+    <view wx:elif="{{currentQuestions.length === 0}}" class="empty-state">
+      <text class="empty-emoji">🔒</text>
+      <text class="empty-text">该关卡还在准备中...</text>
+    </view>
+
+    <!-- 答题区域 -->
+    <view wx:else class="quiz-area">
+      <!-- 进度条 -->
+      <view class="progress-bar-container">
+        <view class="progress-bar-bg">
+          <view 
+            class="progress-bar-fill" 
+            style="width: {{((currentQIndex + 1) / currentQuestions.length) * 100}}%"
+          ></view>
+        </view>
+      </view>
+
+      <!-- 题目卡片 -->
+      <view class="question-card">
+        <view class="question-bg-icon">
+          <image src="/assets/icons/brain.svg" mode="aspectFit" class="question-icon-img"/>
+        </view>
+        <text class="question-text">{{currentQuestion.question}}</text>
+      </view>
+
+      <!-- 选项列表 -->
+      <view class="options-list">
+        <view 
+          wx:for="{{currentQuestion.options}}" 
+          wx:key="index"
+          class="option-btn {{selectedOption === null ? 'option-default' : (index === currentQuestion.correctIndex ? 'option-correct' : (index === selectedOption ? 'option-wrong' : 'option-disabled'))}}"
+          bindtap="selectOption"
+          data-index="{{index}}"
+        >
+          <text class="option-text">{{item}}</text>
+          <image 
+            wx:if="{{selectedOption !== null && index === currentQuestion.correctIndex}}"
+            src="/assets/icons/check-circle.svg" 
+            class="option-icon correct"
+            mode="aspectFit"
+          />
+          <image 
+            wx:if="{{selectedOption !== null && index === selectedOption && index !== currentQuestion.correctIndex}}"
+            src="/assets/icons/x-circle.svg" 
+            class="option-icon wrong"
+            mode="aspectFit"
+          />
+          <view 
+            wx:if="{{selectedOption === null}}"
+            class="option-circle"
+          ></view>
+        </view>
+      </view>
+
+      <!-- 解释弹窗 -->
+      <view wx:if="{{showExplanation}}" class="explanation-panel animate-pop">
+        <view class="explanation-header">
+          <text class="result-emoji {{isCorrect ? 'bounce' : ''}}">{{isCorrect ? '🎉' : '😅'}}</text>
+          <text class="result-title">{{isCorrect ? '答对啦！' : '哎呀，答错了'}}</text>
+        </view>
+        <view class="explanation-content">
+          <text class="explanation-text">💡 {{currentQuestion.explanation}}</text>
+        </view>
+        <!-- 将 button 改为 view 增加点击响应可靠性 -->
+        <view class="btn btn-dark next-btn" bindtap="handleNext">
+          <text>{{currentQIndex < currentQuestions.length - 1 ? '下一题 →' : (currentLevelIndex < levels.length - 1 ? '下一关 →' : '领取奖励 🎁')}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</block>
+
+<view wx:else class="auth-loading-placeholder">
+  <view class="loading-spinner"></view>
+</view>
