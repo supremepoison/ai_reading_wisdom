@@ -129,7 +129,7 @@
     </view>
   <!-- 编辑个人信息弹窗 -->
   <view wx:if="{{showEditModal}}" class="edit-overlay" catchtap="closeEditModal">
-    <view class="edit-modal animate-pop" catchtap="">
+    <view class="edit-modal animate-pop" catchtap="stopPropagation">
       <view class="edit-modal-header">
         <text class="edit-modal-title">编辑个人信息</text>
       </view>

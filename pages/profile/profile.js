@@ -199,6 +199,9 @@ Page({
         this.setData({ showEditModal: false });
     },
 
+    // 阻止事件冒泡（用于弹窗内部的 catchtap）
+    stopPropagation() { },
+
     onEditNameInput(e) {
         this.setData({ editName: e.detail.value });
     },
