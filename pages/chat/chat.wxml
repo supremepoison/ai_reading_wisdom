@@ -29,7 +29,34 @@
 
         <!-- 消息气泡 -->
         <view class="message-bubble {{item.role === 'user' ? 'bubble-user' : 'bubble-ai'}}">
-          <text>{{item.text}}</text>
+          <text user-select="true" wx:if="{{!item.plan}}">{{item.text}}</text>
+          <text user-select="true" wx:if="{{item.plan}}">✅ 学习计划已经生成，请查看：</text>
+
+          <!-- 计划卡片 -->
+          <view wx:if="{{item.type === 'plan' && item.plan}}" class="plan-card">
+            <view class="plan-header">
+              <text class="plan-title">{{item.plan.plan_name || '学习计划'}}</text>
+            </view>
+            <view class="plan-strategy" wx:if="{{item.plan.strategy}}">
+              <text>💡 {{item.plan.strategy}}</text>
+            </view>
+            <view class="plan-tasks">
+              <view class="plan-task-item" wx:for="{{item.plan.daily_tasks}}" wx:for-item="task" wx:key="day">
+                <view class="task-day">{{task.day}}</view>
+                <view class="task-detail">
+                  <text class="task-name">{{task.task}}</text>
+                  <text class="task-time">{{task.estimated_time}}</text>
+                </view>
+              </view>
+            </view>
+            <view class="plan-actions" wx:if="{{!item.plan.accepted}}">
+              <button class="btn-action confirm-btn" bindtap="handleConfirmPlan" data-plan="{{item.plan}}" data-msgid="{{item.id}}">接受此计划</button>
+              <button class="btn-action adjust-btn" bindtap="handleAdjustPlan" data-msgid="{{item.id}}">这有点难，能调整吗？</button>
+            </view>
+            <view class="plan-accepted-msg" wx:else>
+              <text>✅ 已接受该计划，我会在接下来的日子陪你一起完成！</text>
+            </view>
+          </view>
         </view>
       </view>
       

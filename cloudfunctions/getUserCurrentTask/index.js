@@ -34,28 +34,58 @@ exports.main = async (event, context) => {
         }).get()
         const checkedInToday = checkinRes.data.length > 0
 
-        // 章节显示和进度计算逻辑
-        // - current_chapter_index 表示"当前正在读的章节索引"（0=第1章, 1=第2章）
-        // - 进度百分比 = (current_chapter_index / total_chapters) * 100
-        // - 显示逻辑：
-        //   * 未打卡：显示"当前正在读的章节"（current_chapter_index）
-        //   * 已打卡：显示"刚完成的章节"（current_chapter_index，因为打卡后章节不会立即推进）
+        // 章节推进逻辑（延迟推进）：
+        // 如果用户昨天打过卡（last_read_at 是昨天或更早），且今天还没打卡，
+        // 说明该推进到下一章了
         let displayIndex = progress.current_chapter_index || 0
         let completedChapters = 0
+        let needsAdvance = false
 
-        if (!checkedInToday) {
-            // 未打卡：显示"当前正在读的章节"
-            // 初始状态：displayIndex = 0（第1章），进度0%
-            // 第二天：displayIndex = 1（第2章），进度10%
-            displayIndex = progress.current_chapter_index || 0
-            // 已完成的章节数 = 当前章节索引
-            completedChapters = displayIndex
+        // 检查是否需要推进章节
+        // 条件：上次打卡日期存在，且不是今天，说明是新的一天
+        const userRes2 = await db.collection('users').where({ openid: OPENID }).get()
+        const userData = userRes2.data[0] || {}
+        const lastCheckinDate = userData.last_checkin_date || ''
+
+        if (lastCheckinDate && lastCheckinDate !== todayStr) {
+            // 上次打卡不是今天 → 说明是新的一天，需要推进
+            // 但只在 progress 的 last_advanced_date 不等于今天时推进（防止重复推进）
+            const lastAdvanced = progress.last_advanced_date || ''
+            if (lastAdvanced !== todayStr) {
+                needsAdvance = true
+            }
+        }
+
+        if (needsAdvance) {
+            const nextIndex = displayIndex + 1
+            if (nextIndex < book.total_chapters) {
+                await db.collection('user_progress').doc(progress._id).update({
+                    data: {
+                        current_chapter_index: nextIndex,
+                        last_advanced_date: todayStr,
+                        last_read_at: db.serverDate()
+                    }
+                })
+                displayIndex = nextIndex
+                console.log('📖 [推进] 新的一天，章节推进:', displayIndex - 1, '→', displayIndex)
+            } else if (nextIndex === book.total_chapters) {
+                await db.collection('user_progress').doc(progress._id).update({
+                    data: {
+                        current_chapter_index: book.total_chapters - 1,
+                        status: 'finished',
+                        last_advanced_date: todayStr,
+                        updated_at: db.serverDate()
+                    }
+                })
+                displayIndex = book.total_chapters - 1
+                console.log('🏁 [推进] 全书读完！')
+            }
+        }
+
+        if (checkedInToday) {
+            completedChapters = displayIndex + 1  // 已打卡，完成当前章节
         } else {
-            // 已打卡：显示"刚完成的章节"
-            // 今天打卡后：displayIndex = 0（第1章，刚完成），completedChapters = 1，进度10%
-            // 第二天打卡后：displayIndex = 1（第2章，刚完成），completedChapters = 2，进度20%
-            displayIndex = progress.current_chapter_index || 0
-            completedChapters = displayIndex + 1  // 已打卡，完成的章节数 = 当前章节索引 + 1
+            completedChapters = displayIndex  // 未打卡，当前章节进行中
         }
 
         const currentChapter = book.chapters[displayIndex] || '未知章节'

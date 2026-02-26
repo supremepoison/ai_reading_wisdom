@@ -10,7 +10,11 @@ Page({
         medals: [],
         readingHistory: [],
         showBookPicker: false,
-        recommendBooks: []
+        recommendBooks: [],
+        // 编辑模式
+        showEditModal: false,
+        editName: '',
+        editPhone: ''
     },
 
     onLoad() {
@@ -93,7 +97,7 @@ Page({
 
     navigateToAdmin() {
         wx.navigateTo({
-            url: '/pages/admin/user-list/user-list'
+            url: '/subPackages/admin/user-list/user-list'
         });
     },
 
@@ -177,6 +181,68 @@ Page({
         } catch (err) {
             console.error('选择书籍失败', err);
             wx.showToast({ title: '选择失败', icon: 'none' });
+        } finally {
+            wx.hideLoading();
+        }
+    },
+
+    // ========== 编辑个人信息 ==========
+    openEditModal() {
+        this.setData({
+            showEditModal: true,
+            editName: this.data.userInfo?.name || '',
+            editPhone: this.data.userInfo?.phone || ''
+        });
+    },
+
+    closeEditModal() {
+        this.setData({ showEditModal: false });
+    },
+
+    onEditNameInput(e) {
+        this.setData({ editName: e.detail.value });
+    },
+
+    onEditPhoneInput(e) {
+        this.setData({ editPhone: e.detail.value });
+    },
+
+    async saveProfile() {
+        const { editName, editPhone } = this.data;
+
+        if (!editName.trim()) {
+            return wx.showToast({ title: '姓名不能为空', icon: 'none' });
+        }
+        if (editPhone && !/^1\d{10}$/.test(editPhone)) {
+            return wx.showToast({ title: '手机号格式有误', icon: 'none' });
+        }
+
+        wx.showLoading({ title: '保存中...' });
+        try {
+            const res = await wx.cloud.callFunction({
+                name: 'updateProfile',
+                data: { name: editName.trim(), phone: editPhone }
+            });
+
+            if (res.result.code === 0) {
+                // 更新本地和全局状态
+                this.setData({
+                    'userInfo.name': editName.trim(),
+                    'userInfo.phone': editPhone,
+                    showEditModal: false
+                });
+                app.globalData.userInfo = {
+                    ...app.globalData.userInfo,
+                    name: editName.trim(),
+                    phone: editPhone
+                };
+                wx.showToast({ title: '保存成功', icon: 'success' });
+            } else {
+                wx.showToast({ title: res.result.msg || '保存失败', icon: 'none' });
+            }
+        } catch (err) {
+            console.error('保存个人信息失败', err);
+            wx.showToast({ title: '保存失败', icon: 'none' });
         } finally {
             wx.hideLoading();
         }

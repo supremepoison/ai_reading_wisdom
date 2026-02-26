@@ -18,6 +18,7 @@ Page({
             chapterNumber: 1
         },
         calendarDays: [],
+        currentMonthDisplay: '',
         isRecording: false,
         willCancel: false,
         isRegistered: false,
@@ -205,10 +206,20 @@ Page({
         const month = now.getMonth();
         const todayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-        // 当月有多少天
+        // 1. 获取当月天数
         const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // 2. 获取当月第一天是星期几 (0-6, 0 是周日)
+        const firstDay = new Date(year, month, 1).getDay();
+
+        // 3. 构建日历展示数据
         const calendarDays = [];
         const logSet = new Set(logs);
+
+        // 添加月初空白位 (对齐星期)
+        for (let i = 0; i < firstDay; i++) {
+            calendarDays.push({ day: '', status: 'empty' });
+        }
 
         for (let i = 1; i <= daysInMonth; i++) {
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
@@ -218,8 +229,6 @@ Page({
                 status = 'checked';
             } else if (dateStr === todayStr) {
                 status = this.data.checkedInToday ? 'checked' : 'today';
-            } else if (new Date(dateStr) < now) {
-                status = 'future'; // 过去没打卡的也显示为 future 或者可以加个 missed 样式
             }
 
             calendarDays.push({
@@ -228,7 +237,10 @@ Page({
             });
         }
 
-        this.setData({ calendarDays });
+        this.setData({
+            calendarDays,
+            currentMonthDisplay: `${year}年${month + 1}月`
+        });
     },
 
 

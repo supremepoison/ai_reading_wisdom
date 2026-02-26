@@ -117,49 +117,10 @@ exports.main = async (event, context) => {
 
         await db.collection('users').where({ openid: OPENID }).update({ data: updateData });
 
-        // 5.3 推进阅读进度（仅当今天首次打卡时才推进）
-        if (!todayEarnedCheckin) {
-            try {
-                const progressRes = await db.collection('user_progress')
-                    .where({ openid: OPENID, status: 'reading' })
-                    .orderBy('last_read_at', 'desc')
-                    .limit(1)
-                    .get()
-
-                if (progressRes.data.length > 0) {
-                    const progressId = progressRes.data[0]._id;
-                    const bookId = progressRes.data[0].book_id;
-
-                    const bookRes = await db.collection('books').doc(bookId).get();
-                    if (bookRes.data) {
-                        const totalChapters = bookRes.data.total_chapters;
-                        const currentIndex = progressRes.data[0].current_chapter_index || 0;
-                        const nextIndex = currentIndex + 1;
-
-                        if (nextIndex < totalChapters) {
-                            // 还有下一章
-                            await db.collection('user_progress').doc(progressId).update({
-                                data: {
-                                    current_chapter_index: nextIndex,
-                                    last_read_at: db.serverDate()
-                                }
-                            });
-                        } else if (nextIndex === totalChapters) {
-                            // 最后一章也读完了
-                            await db.collection('user_progress').doc(progressId).update({
-                                data: {
-                                    current_chapter_index: totalChapters, // 标记为全部完成
-                                    status: 'finished',
-                                    updated_at: db.serverDate()
-                                }
-                            });
-                        }
-                    }
-                }
-            } catch (e) {
-                console.error('更新阅读进度失败', e);
-            }
-        }
+        // 5.3 标记当前章节"今日已读完"，但不立即推进章节
+        // 章节推进改为在 getUserCurrentTask 中执行（下一天首次加载时才推进）
+        // 这样用户打卡后仍然停留在当前章节，可以继续与书灵聊天、做闯关题等
+        console.log('📖 [打卡] 打卡成功，当前章节保持不变，等待下次加载时推进');
 
         return {
             code: 0,

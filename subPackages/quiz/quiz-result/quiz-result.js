@@ -40,9 +40,24 @@ Page({
         }
     },
 
+    // "返回阅读"改为直接回首页，避免返回已完成的闯关页面刷积分
     goBack() {
-        wx.navigateBack({
-            delta: 1
+        wx.switchTab({
+            url: '/pages/home/home'
+        });
+    },
+
+    // 重新闯关：回到闯关页并重置状态
+    retryQuiz() {
+        // 先回到闯关 tab，然后通知其重置
+        const pages = getCurrentPages();
+        // 找到闯关页并重置
+        const quizPage = pages.find(p => p.route === 'pages/quiz/quiz');
+        if (quizPage) {
+            quizPage.setData({ _loaded: false });
+        }
+        wx.switchTab({
+            url: '/pages/quiz/quiz'
         });
     },
 

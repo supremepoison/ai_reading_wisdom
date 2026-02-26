@@ -114,23 +114,17 @@ Page({
         try {
             const book = this.data.currentBook || {};
             const res = await wx.cloud.callFunction({
-                name: 'chatWithAI',
+                name: 'generateNote',
                 data: {
-                    type: 'generate_note',
-                    bookTitle: book.title || '书本',
+                    bookName: book.title || '书本',
                     chapter: book.currentChapter || '当前章节',
-                    context: {
-                        bookTitle: book.title || '书本',
-                        chapter: book.currentChapter || '当前章节',
-                        answers: this.data.questions.map((q, i) => ({
-                            q, a: this.data.answers[i]
-                        }))
-                    }
+                    questions: this.data.questions,
+                    answers: this.data.answers
                 }
             });
 
             if (res.result && res.result.code === 0) {
-                const noteContent = res.result.reply || "";
+                const noteContent = res.result.data?.note || "";
                 if (!noteContent) {
                     throw new Error('AI 返回内容为空');
                 }
@@ -139,7 +133,7 @@ Page({
                     step: 'result'
                 });
 
-                const pointsEarned = res.result.pointsEarned || 0;
+                const pointsEarned = res.result.data?.pointsEarned || 0;
                 app.addPoints(pointsEarned);
                 wx.showToast({ title: `积分 +${pointsEarned}`, icon: 'success' });
             } else {

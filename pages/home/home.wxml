@@ -86,14 +86,23 @@
 
     <!-- 日历打卡记录 -->
     <view class="card calendar-card">
-      <view class="calendar-header flex items-center">
-        <image src="/assets/icons/calendar.svg" mode="aspectFit" class="icon-sm"/>
-        <text class="text-title" style="margin-left: 16rpx;">我的足迹</text>
+      <view class="calendar-header flex items-center justify-between">
+        <view class="flex items-center">
+          <image src="/assets/icons/calendar.svg" mode="aspectFit" class="icon-sm"/>
+          <text class="text-title" style="margin-left: 16rpx;">我的足迹</text>
+        </view>
+        <text class="month-display">{{currentMonthDisplay}}</text>
       </view>
+      
+      <!-- 星期表头 -->
+      <view class="weekday-header">
+        <text wx:for="{{['日','一','二','三','四','五','六']}}" wx:key="*this">{{item}}</text>
+      </view>
+
       <view class="calendar-grid">
         <view
           wx:for="{{calendarDays}}"
-          wx:key="day"
+          wx:key="index"
           class="calendar-day {{item.status}}"
         >
           <text>{{item.day}}</text>
@@ -121,7 +130,7 @@
         <text class="picker-title">开启智慧之旅</text>
         <text class="picker-subtitle">根据您的等级，为您推荐以下书籍</text>
       </view>
-      <scroll-view scroll-y class="book-shelf">
+      <scroll-view scroll-y class="book-shelf" style="max-height: 60vh;">
         <view 
           wx:for="{{recommendBooks}}" 
           wx:key="_id" 

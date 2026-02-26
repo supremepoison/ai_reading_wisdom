@@ -47,7 +47,7 @@
 
   <!-- 操作按钮 -->
   <view class="action-section">
-    <button class="btn-main" bindtap="goBack">返回阅读</button>
-    <button class="btn-sub" bindtap="goHome">回到首页</button>
+    <button class="btn-main" bindtap="retryQuiz">再次闯关</button>
+    <button class="btn-sub" bindtap="goBack">返回阅读</button>
   </view>
 </view>

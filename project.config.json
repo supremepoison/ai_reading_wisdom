@@ -33,7 +33,12 @@
   "description": "智慧之匙 - AI阅读伙伴小程序",
   "libVersion": "3.7.4",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "cloudfunctions"
+      }
+    ],
     "include": []
   },
   "editorSetting": {

@@ -1,7 +1,7 @@
 {
-    "name": "updateUserLevel",
+    "name": "smart-dialogue-agent",
     "version": "1.0.0",
-    "description": "",
+    "description": "智能对话Agent - 意图识别 + 多Agent调度",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,6 +9,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "wx-server-sdk": "latest"
+        "wx-server-sdk": "latest",
+        "axios": "^1.6.0"
     }
 }

@@ -1,12 +1,15 @@
 <!--pages/profile/profile.wxml - 个人中心-->
 <block wx:if="{{isRegistered}}">
   <view class="container">
-    <!-- 用户头像和信息 -->
+    <!-- 用户信息区域（无头像，名字特效） -->
     <view class="profile-header">
-      <view class="avatar-container">
-        <image src="{{userInfo.avatarUrl || 'https://picsum.photos/id/64/200/200'}}" class="avatar" mode="aspectFill"/>
+      <text class="greeting-emoji">👋</text>
+      <view class="name-row">
+        <text class="user-name-fancy">{{userInfo.name || '未命名'}}</text>
+        <view class="edit-name-btn" bindtap="openEditModal">
+          <text>✏️</text>
+        </view>
       </view>
-      <text class="user-name">{{userInfo.name || '未命名'}}</text>
       <view class="user-badges">
         <view class="level-badge">
           <text wx:if="{{levelNames.length > 0}}">LV.{{userInfo.level || 1}} {{levelNames[(userInfo.level || 1) - 1]}}</text>
@@ -124,6 +127,28 @@
         </view>
       </view>
     </view>
+  <!-- 编辑个人信息弹窗 -->
+  <view wx:if="{{showEditModal}}" class="edit-overlay" catchtap="closeEditModal">
+    <view class="edit-modal animate-pop" catchtap="">
+      <view class="edit-modal-header">
+        <text class="edit-modal-title">编辑个人信息</text>
+      </view>
+      <view class="edit-form">
+        <view class="edit-form-item">
+          <text class="edit-label">姓名</text>
+          <input class="edit-input" value="{{editName}}" bindinput="onEditNameInput" placeholder="请输入姓名" />
+        </view>
+        <view class="edit-form-item">
+          <text class="edit-label">手机号</text>
+          <input class="edit-input" type="number" value="{{editPhone}}" bindinput="onEditPhoneInput" placeholder="请输入手机号" maxlength="11" />
+        </view>
+      </view>
+      <view class="edit-modal-footer">
+        <view class="edit-cancel-btn" bindtap="closeEditModal"><text>取消</text></view>
+        <view class="edit-save-btn" bindtap="saveProfile"><text>保存</text></view>
+      </view>
+    </view>
+  </view>
   </view>
 </block>
 

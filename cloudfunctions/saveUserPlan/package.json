@@ -1,15 +1,14 @@
 {
-    "name": "chatWithAI",
+    "name": "save-user-plan",
     "version": "1.0.0",
-    "description": "",
+    "description": "保存用户接受的学习计划",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
-    "author": "",
+    "author": "Antigravity",
     "license": "ISC",
     "dependencies": {
-        "wx-server-sdk": "latest",
-        "axios": "^1.6.0"
+        "wx-server-sdk": "~2.6.3"
     }
 }

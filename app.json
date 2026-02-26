@@ -4,11 +4,25 @@
         "pages/chat/chat",
         "pages/notes/notes",
         "pages/quiz/quiz",
-        "pages/quiz-result/quiz-result",
         "pages/register/register",
-        "pages/profile/profile",
-        "pages/admin/user-list/user-list",
-        "pages/admin/user-detail/user-detail"
+        "pages/profile/profile"
+    ],
+    "subPackages": [
+        {
+            "root": "subPackages/admin",
+            "name": "admin",
+            "pages": [
+                "user-list/user-list",
+                "user-detail/user-detail"
+            ]
+        },
+        {
+            "root": "subPackages/quiz",
+            "name": "quiz",
+            "pages": [
+                "quiz-result/quiz-result"
+            ]
+        }
     ],
     "window": {
         "navigationBarBackgroundColor": "#FFFDF5",
@@ -19,20 +33,20 @@
     },
     "tabBar": {
         "custom": false,
-        "color": "#9C8C74",
-        "selectedColor": "#FFD93D",
-        "backgroundColor": "#FFFFFF",
+        "color": "#5D4037",
+        "selectedColor": "#FF8F00",
+        "backgroundColor": "#FFFDF5",
         "borderStyle": "white",
         "list": [
             {
                 "pagePath": "pages/home/home",
-                "text": "打卡",
+                "text": "主页",
                 "iconPath": "assets/icons/tab/home.png",
                 "selectedIconPath": "assets/icons/tab/home-active.png"
             },
             {
                 "pagePath": "pages/chat/chat",
-                "text": "导读",
+                "text": "书灵",
                 "iconPath": "assets/icons/tab/chat.png",
                 "selectedIconPath": "assets/icons/tab/chat-active.png"
             },

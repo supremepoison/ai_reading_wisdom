@@ -193,13 +193,13 @@ Page({
             wx.hideLoading();
             const earned = res.result?.pointsEarned ?? 0;
             wx.navigateTo({
-                url: `/pages/quiz-result/quiz-result?correct=${totalCorrect}&total=${totalQuestions}&score=${earned}`
+                url: `/subPackages/quiz/quiz-result/quiz-result?correct=${totalCorrect}&total=${totalQuestions}&score=${earned}`
             });
         } catch (err) {
             console.error('[finishQuiz] 失败:', err);
             wx.hideLoading();
             wx.navigateTo({
-                url: `/pages/quiz-result/quiz-result?correct=${totalCorrect}&total=${totalQuestions}&score=0`
+                url: `/subPackages/quiz/quiz-result/quiz-result?correct=${totalCorrect}&total=${totalQuestions}&score=0`
             });
         }
     }

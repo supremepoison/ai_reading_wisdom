@@ -22,7 +22,7 @@ exports.main = async (event, context) => {
                 // 直接查询数字类型的等级
                 recommend_level: _.lte(level)
             })
-            .limit(20)
+            .limit(100)
             .get()
 
         // 3. 严格兜底过滤 (处理可能存在的字符串类型数据)
